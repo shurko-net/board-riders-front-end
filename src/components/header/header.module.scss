@@ -1,0 +1,204 @@
+@import '../../scss/mixins';
+
+.header {
+  @apply relative left-0 top-0 w-full;
+  .top {
+    @apply bg-black py-[10px] text-lightGray caption md:hidden;
+
+    .benefitsBlock {
+      @include adaptiveValue('column-gap', 30, 15, 1920, 991.98);
+      @apply flex items-center;
+      .benfit {
+        @apply flex items-center gap-[0.9375rem];
+      }
+    }
+  }
+  .body {
+    @apply bg-white py-[10px] text-black caption;
+    .bodyContainer {
+      @include adaptiveValue('min-height', 74, 40);
+      @apply container flex min-h-[74px] items-center;
+    }
+    .bodyMobileNavigation {
+      @apply flex max-w-[340px] items-center justify-between px-[20px];
+    }
+    .iconMenu {
+      display: none;
+      @media (max-width: 991.98px) {
+        display: block;
+        position: relative;
+        width: rem(20);
+        height: rem(12);
+        cursor: pointer;
+        z-index: 2;
+        span,
+        &::before,
+        &::after {
+          content: '';
+          transition: all 0.3s ease 0s;
+          right: 0;
+          position: absolute;
+          width: 100%;
+          height: rem(2);
+          background-color: #000;
+        }
+        &::before {
+          top: 0;
+        }
+        &::after {
+          bottom: 0;
+        }
+        span {
+          top: calc(50% - rem(1));
+        }
+      }
+    }
+    .menuOpen {
+      span {
+        width: 0;
+      }
+      &::before,
+      &::after {
+      }
+      &::before {
+        top: calc(50% - rem(1));
+        transform: rotate(-45deg);
+      }
+      &::after {
+        bottom: calc(50% - rem(1));
+        transform: rotate(45deg);
+      }
+    }
+    .menu {
+      @include adaptiveValue('margin-right', 27.0192, 10, 479.98);
+      .menuBody {
+        @media (max-width: 991.98px) {
+          position: fixed;
+          width: 320px;
+          height: 100vh;
+          top: 0;
+          left: 0;
+          overflow: auto;
+          background-color: white;
+          z-index: 4;
+        }
+      }
+      .personalCabinet {
+        .personalCabinetContainer {
+          @apply flex flex-col px-[1.25rem];
+        }
+      }
+    }
+    .bodyNavigation {
+      @apply text-sm leading-[17px] md:uppercase md:text-darkGray md:body4-capital;
+      .bodyList {
+        @include adaptiveValue('column-gap', 25, 15);
+        @apply flex gap-y-[5px];
+        .bodyItem {
+          .bodyLink {
+            @apply relative after:absolute after:-bottom-[10px] after:left-0 after:h-[2px] after:w-full after:scale-0 after:bg-black after:transition-transform hover:after:scale-100 md:flex md:min-h-[3.75rem] md:items-center;
+          }
+        }
+      }
+    }
+    .logoLink {
+      @include adaptiveValue('height', 50, 31);
+      @include adaptiveValue('width', 243, 150);
+      @apply flex justify-center;
+      flex: 1 1 auto;
+      svg {
+        height: auto;
+      }
+    }
+    .userActions {
+      button:first-child {
+        @apply xs:hidden;
+      }
+      @media (max-width: 479.98px) {
+        @include adaptiveValue('column-gap', 27.0192, 10, 479.98);
+      }
+      @apply flex flex-wrap items-center gap-x-[25px] gap-y-[5px];
+      .userActionsItem {
+        @apply flex cursor-pointer flex-col items-center gap-y-[5px] caption-capital;
+      }
+    }
+  }
+  .catalog {
+    @apply bg-[#F9F9F9] py-[10px] md:mb-[1.25rem] md:bg-white md:py-0;
+    .ctalogMenu {
+      @apply w-full;
+      .ctalogMenuList {
+        @apply flex flex-wrap gap-[25px] gap-y-[5px] md:flex-col;
+        .catalogMenuItem {
+          @apply hover:underline;
+          .catalogMenuLink {
+            @apply w-full md:flex md:min-h-[3rem] md:items-center md:justify-between md:border-b md:border-[#e5e5e5] md:px-[1.25rem];
+          }
+        }
+      }
+    }
+  }
+}
+
+.topMenu {
+  flex: 1 1 auto;
+  @apply md:pl-[1.25rem] md:pr-[3.875rem];
+}
+
+.topBody {
+  @apply flex md:flex-col md:gap-y-[1.25rem];
+  .locationBlock {
+    @apply relative md:!m-0;
+    svg:first-of-type {
+      font-size: rem(20);
+      margin: 0px em(15, 20) 0px 0px;
+    }
+    span {
+      margin: 0px em(12, 12) 0px 0px;
+    }
+    margin: 0px em(35, 12) 0px 0px;
+    .locationButton {
+      @apply flex items-center hover:underline;
+    }
+
+    .locationContent {
+      .selected {
+        @apply overflow-hidden break-words text-[20px] font-normal;
+      }
+      .form {
+        @apply my-7;
+        .input {
+          @apply w-full cursor-text rounded border border-solid border-[#e0e0e0] p-2 pl-4 pr-8 text-[14px] leading-[18px] text-[#303030] focus:outline-none;
+        }
+      }
+    }
+    .locationCities {
+      @apply -mx-2 grid auto-rows-fr grid-cols-2 gap-x-1 gap-y-3;
+      .city {
+        @apply inline-block overflow-hidden rounded-[6px] p-[8px] text-[16px];
+      }
+    }
+    .locationInfo {
+      @apply text-[14px];
+    }
+    .close {
+      &::after {
+        transition: background 0.25s ease-in-out;
+      }
+      &::before {
+        transition: background 0.25s ease-in-out;
+      }
+      @apply absolute right-[22px] top-[22px] z-[3] h-[24px] w-[24px] rotate-45 transform cursor-pointer before:absolute before:left-0 before:top-[50%] before:inline-block before:h-[2px] before:w-full before:-translate-y-[50%] before:bg-[#929292] after:absolute after:left-0 after:top-[50%] after:h-[2px] after:w-full after:-translate-y-[50%] after:rotate-90 after:transform after:bg-[#929292] before:hover:bg-[#757575] after:hover:bg-[#757575];
+    }
+  }
+  .topMenuList {
+    @apply flex flex-wrap justify-evenly;
+    @include adaptiveValue('column-gap', 26, 13, 1920, 991.98);
+    row-gap: 5px;
+    .topMenuItem {
+      .topMenuLink {
+        @apply caption hover:underline;
+      }
+    }
+  }
+}
