@@ -96,7 +96,7 @@
         @apply flex gap-y-[5px];
         .bodyItem {
           .bodyLink {
-            @apply relative after:absolute after:-bottom-[10px] after:left-0 after:h-[2px] after:w-full after:scale-0 after:bg-black after:transition-transform hover:after:scale-100 md:flex md:min-h-[3.75rem] md:items-center;
+            @apply relative after:absolute after:-bottom-[10px] after:left-0 after:h-[2px] after:w-full after:scale-0 after:bg-black after:transition-transform hover:after:scale-100 md:flex md:min-h-[3.75rem] md:items-center ;
           }
         }
       }

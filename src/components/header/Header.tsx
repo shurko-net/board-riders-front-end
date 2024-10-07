@@ -11,9 +11,13 @@ import LocationIcon from '../LocationIcon'
 import LogoIcon from '../LogoIcon'
 import LoupeIcon from '../LoupeIcon'
 import ProfileIcon from '../ProfileIcon'
+
+import { useGetUser } from '@/api/queries/useGetUser'
+import { Registration } from '../registration/Registration'
 import SingIcon from '../SignIcon'
 import Spoiler from '../spoiler/Spoiler'
 import style from './header.module.scss'
+
 const menuCatalogArray = [
   'Новинки',
   'Сноуборд',
@@ -30,11 +34,18 @@ const menuCatalogArray = [
   'Распродажа'
 ]
 function Header() {
+  const { data: user, isLoading } = useGetUser()
   useDynamicAdapt('max')
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [hasMounted, setHasMounted] = useState<boolean>(false)
-  const [isActive, setIsActive] = useState<boolean>(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [hasMounted, setHasMounted] = useState(false)
+  const [isActive, setIsActive] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [toggleLoginButton, setToggleLoginButton] = useState(1)
   const buttonRef = useRef<HTMLButtonElement | null>(null)
+
+  function updateToggle(id: number) {
+    setToggleLoginButton(id)
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -51,6 +62,12 @@ function Header() {
       window.removeEventListener('resize', handleResize)
     }
   }, [isOpen, hasMounted])
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  console.log(user)
 
   return (
     <header className={style.header}>
@@ -188,12 +205,20 @@ function Header() {
                   <button
                     className='btn-normal-state mb-[0.625rem] body2'
                     type='button'
+                    onClick={() => {
+                      updateToggle(1)
+                      setIsModalOpen(true)
+                    }}
                   >
                     Войти
                   </button>
                   <button
                     className='btn-border-normal-state mb-[1.25rem]'
                     type='button'
+                    onClick={() => {
+                      setIsModalOpen(true)
+                      updateToggle(2)
+                    }}
                   >
                     Зарегистрироваться
                   </button>
@@ -229,10 +254,23 @@ function Header() {
             <LogoIcon />
           </Link>
           <div className={style.userActions}>
-            <button className={style.userActionsItem}>
+            <button
+              onClick={() => {
+                updateToggle(1)
+                setIsModalOpen(true)
+              }}
+              className={style.userActionsItem}
+            >
               <ProfileIcon />
-              <p className='md:hidden'>Войти</p>
+              <p className='md:hidden'>{user ? 'Выйти' : 'Войти'}</p>
             </button>
+
+            <Registration
+              onClose={() => setIsModalOpen(false)}
+              isOpen={isModalOpen}
+              toggleLoginButton={toggleLoginButton}
+              updateToggle={updateToggle}
+            ></Registration>
             <Link className={style.userActionsItem} href='/#'>
               <FavoritesIcon className='h-[24px] w-[24px] xs:h-auto xs:w-[20px]' />
               <p className='md:hidden'>Избранное</p>

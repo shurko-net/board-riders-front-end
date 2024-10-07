@@ -1,6 +1,9 @@
+import Header from '@/components/header/Header'
 import { SITE_NAME } from '@/constants/seo.constants'
 import type { Metadata } from 'next'
+import React from 'react'
 import '../scss/global.scss'
+import { Providers } from './Providers'
 
 export const metadata: Metadata = {
   title: {
@@ -18,7 +21,12 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body>
-        <div className='wrapper'>{children}</div>
+        <Providers>
+          <div className='wrapper'>
+            <Header />
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   )

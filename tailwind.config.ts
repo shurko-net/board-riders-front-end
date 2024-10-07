@@ -4,6 +4,9 @@ import type { Config, PluginAPI } from 'tailwindcss/types/config'
 import { COLORS } from './src/constants/color.constants'
 
 const config: Config = {
+  future: {
+    hoverOnlyWhenSupported: true
+  },
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -215,11 +218,7 @@ const config: Config = {
           width: '100%',
           color: COLORS.darkGray,
           backgroundColor: COLORS.black,
-          fontWeight: '500',
-          fontSize: '16px',
-          lineHeight: '30px',
-          letterSpacing: '-0.05em',
-          padding: '10px 98px'
+          minHeight: '3.125rem'
         },
         '.btn-disabled': {
           width: '100%',
