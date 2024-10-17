@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosResponse, CreateAxiosDefaults } from 'axios'
+import authService from '@/services/auth/auth.sevice'
+import axios, { CreateAxiosDefaults } from 'axios'
 
 export const API_URL = 'https://localhost:7151/api'
 
@@ -7,32 +8,27 @@ const axiosOptions: CreateAxiosDefaults = {
   withCredentials: true
 }
 
+export const axiosClassic = axios.create(axiosOptions)
+
 export const instance = axios.create(axiosOptions)
 
-export const request = ({ ...options }) => {
-  const onSuccess = (response: AxiosResponse) => response
-  const onError = (error: AxiosError) => {
-    return error
-  }
-
-  return instance(options).then(onSuccess).catch(onError)
-}
-
 instance.interceptors.response.use(
-  response => {
-    return response
-  },
+  config => config,
   async error => {
-    const { response } = error
-
-    if (response && response.status === 401) {
+    const originRequest = error.config
+    if (
+      error.response.status === 401 &&
+      error.config &&
+      !error.config._isRetry
+    ) {
+      originRequest._isRetry = true
       try {
-        await request({ url: '/auth/refresh' })
-        // await request({ url: '/user/get-user' })
+        await authService.refreshToken()
+        return instance.request(originRequest)
       } catch (err) {
-        console.error('Ошибка обновления токена', err)
+        console.log('err', err)
       }
     }
-    return Promise.reject(error)
+    throw error
   }
 )

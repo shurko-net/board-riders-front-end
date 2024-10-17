@@ -1,15 +1,32 @@
+import authService from '@/services/auth/auth.sevice'
+import { IFormDataLogin } from '@/types/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { request } from '../axios'
+import { useRouter } from 'next/navigation'
+import { useTransition } from 'react'
 
 export function useLogin() {
+  const { push } = useRouter()
   const queryClient = useQueryClient()
 
-  return useMutation({
-    mutationFn: data => {
-      return request({ method: 'post', url: '/auth/login', data: data })
+  const [isPending, startTransition] = useTransition()
+  const {
+    mutate: mutateLogin,
+    isPending: isLoginPending,
+    isError,
+    error
+  } = useMutation({
+    mutationFn: (data: IFormDataLogin) => {
+      return authService.main('login', data)
     },
     onSuccess: user => {
-      queryClient.setQueryData(['user', user])
+      startTransition(() => {
+        queryClient.setQueryData(['user'], user)
+        push('/')
+      })
     }
   })
+
+  const isLoginLoading = isLoginPending || isPending
+
+  return { mutateLogin, isLoginLoading, isError, error }
 }
