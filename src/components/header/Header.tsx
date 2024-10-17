@@ -11,9 +11,14 @@ import LocationIcon from '../LocationIcon'
 import LogoIcon from '../LogoIcon'
 import LoupeIcon from '../LoupeIcon'
 import ProfileIcon from '../ProfileIcon'
+
+import { useGetUser } from '@/api/queries/useGetUser'
+import { useLogout } from '@/api/queries/useLogout'
+import { Registration } from '../registration/Registration'
 import SingIcon from '../SignIcon'
 import Spoiler from '../spoiler/Spoiler'
 import style from './header.module.scss'
+
 const menuCatalogArray = [
   'Новинки',
   'Сноуборд',
@@ -30,11 +35,23 @@ const menuCatalogArray = [
   'Распродажа'
 ]
 function Header() {
+  const { data: user, isLoading } = useGetUser()
+  const { mutateLogout, isLogoutLoading } = useLogout()
+  // const { isLoginLoading } = useLogin()
+
   useDynamicAdapt('max')
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [hasMounted, setHasMounted] = useState<boolean>(false)
-  const [isActive, setIsActive] = useState<boolean>(false)
-  const buttonRef = useRef<HTMLButtonElement | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
+  const [hasMounted, setHasMounted] = useState(false)
+  const [isActiveLocation, setIsActiveLocation] = useState(false)
+  const [isActiveAccount, setIsActiveAccount] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [toggleLoginButton, setToggleLoginButton] = useState(1)
+  const buttonRefLocation = useRef<HTMLButtonElement | null>(null)
+  const buttonRefAccount = useRef<HTMLButtonElement | null>(null)
+
+  function updateToggle(id: number) {
+    setToggleLoginButton(id)
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -52,6 +69,10 @@ function Header() {
     }
   }, [isOpen, hasMounted])
 
+  if (isLoading || isLogoutLoading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <header className={style.header}>
       <div className={style.top}>
@@ -60,21 +81,22 @@ function Header() {
             <nav className={style.topBody}>
               <div className={style.locationBlock}>
                 <button
-                  onClick={() => setIsActive(!isActive)}
+                  onClick={() => setIsActiveLocation(!isActiveLocation)}
                   className={style.locationButton}
-                  ref={buttonRef}
+                  ref={buttonRefLocation}
                 >
                   <LocationIcon className='md:fill-[black]' fill='#F2F2F2' />
                   <span>Ваш регион доставки: Киев</span>
                   <ArrowIcon
                     fill='#F2F2F2'
-                    className={`transform transition-transform duration-300 ease-out hover:scale-105 md:fill-[black] ${isActive && '-translate-y-[30%] rotate-[180deg]'}`}
+                    className={`transform transition-transform duration-300 ease-out hover:scale-105 md:fill-[black] ${isActiveLocation && '-translate-y-[30%] rotate-[180deg]'}`}
                   />
                 </button>
                 <Spoiler
-                  buttonRef={buttonRef}
-                  isActive={isActive}
-                  setIsActive={setIsActive}
+                  buttonRef={buttonRefLocation}
+                  isActive={isActiveLocation}
+                  setIsActive={setIsActiveLocation}
+                  className='absolute left-[-24px] top-[20px] z-20 mt-[15px] h-auto w-[520px] rounded-[6px] bg-white p-[24px] text-darkGray shadow-custom md:w-[100vw]'
                 >
                   <div className={style.locationContent}>
                     <h1 className={style.selected}>
@@ -113,7 +135,7 @@ function Header() {
                     місті
                   </p>
                   <button
-                    onClick={() => setIsActive(!isActive)}
+                    onClick={() => setIsActiveLocation(!isActiveLocation)}
                     className={style.close}
                   ></button>
                 </Spoiler>
@@ -188,12 +210,20 @@ function Header() {
                   <button
                     className='btn-normal-state mb-[0.625rem] body2'
                     type='button'
+                    onClick={() => {
+                      updateToggle(1)
+                      setIsModalOpen(true)
+                    }}
                   >
                     Войти
                   </button>
                   <button
                     className='btn-border-normal-state mb-[1.25rem]'
                     type='button'
+                    onClick={() => {
+                      setIsModalOpen(true)
+                      updateToggle(2)
+                    }}
                   >
                     Зарегистрироваться
                   </button>
@@ -229,10 +259,57 @@ function Header() {
             <LogoIcon />
           </Link>
           <div className={style.userActions}>
-            <button className={style.userActionsItem}>
-              <ProfileIcon />
-              <p className='md:hidden'>Войти</p>
+            <button
+              onClick={
+                user
+                  ? () => setIsActiveAccount(!isActiveAccount)
+                  : () => {
+                      updateToggle(1)
+                      setIsModalOpen(true)
+                    }
+              }
+              ref={buttonRefAccount}
+              className={style.userActionsItem}
+            >
+              {user ? (
+                <div className='cap flex h-[24px] w-[24px] items-center justify-center rounded-[50%] bg-black text-white caption-capital'>
+                  {user.data.name[0]}
+                </div>
+              ) : (
+                <ProfileIcon />
+              )}
+
+              <p className='md:hidden'>{user ? 'Аккаунт' : 'Войти'}</p>
+              <Spoiler
+                buttonRef={buttonRefAccount}
+                isActive={isActiveAccount}
+                setIsActive={setIsActiveAccount}
+                className='absolute bottom-[-90px] left-[5px] z-20 h-auto w-[135px] bg-white'
+              >
+                <button className='flex h-[40px] w-[135px] items-center gap-[15px] border border-lightGray pl-[13px] before:absolute before:-top-[6px] before:left-5 before:z-10 before:border-b-[9px] before:border-l-[5px] before:border-r-[5px] before:border-b-lightGray before:border-l-transparent before:border-r-transparent after:absolute after:-top-[4px] after:left-[21px] after:z-10 after:border-b-[7px] after:border-l-[4px] after:border-r-[4px] after:border-b-white after:border-l-transparent after:border-r-transparent'>
+                  <ProfileIcon />
+                  <p>мой аккаунт</p>
+                </button>
+                <button
+                  onClick={() => mutateLogout()}
+                  className='flex h-[40px] w-[135px] items-center gap-[15px] border border-t-0 border-lightGray pl-[13px]'
+                >
+                  <ProfileIcon />
+                  выйти
+                </button>
+              </Spoiler>
+              {/* <div className='absolute bottom-[-90px] left-[5px]'>
+                <div className='h-[45px] w-[135px]'>мой аккаунт</div>
+                <div className='h-[45px] w-[135px]'>выйти</div>
+              </div> */}
             </button>
+
+            <Registration
+              onClose={() => setIsModalOpen(false)}
+              isOpen={isModalOpen}
+              toggleLoginButton={toggleLoginButton}
+              updateToggle={updateToggle}
+            ></Registration>
             <Link className={style.userActionsItem} href='/#'>
               <FavoritesIcon className='h-[24px] w-[24px] xs:h-auto xs:w-[20px]' />
               <p className='md:hidden'>Избранное</p>

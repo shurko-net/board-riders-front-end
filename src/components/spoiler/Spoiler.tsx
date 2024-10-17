@@ -5,13 +5,15 @@ interface ISpoilerProps {
   isActive?: boolean
   setIsActive?: (active: boolean) => void
   buttonRef?: React.RefObject<HTMLButtonElement>
+  className: string
 }
 
 function Spoiler({
   children,
   isActive,
   setIsActive,
-  buttonRef
+  buttonRef,
+  className
 }: ISpoilerProps) {
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
@@ -34,10 +36,7 @@ function Spoiler({
 
   return (
     isActive && (
-      <div
-        ref={dropdownRef}
-        className='shadow-custom absolute left-[-24px] top-[20px] z-20 mt-[15px] h-auto w-[520px] rounded-[6px] bg-white p-[24px] text-darkGray md:w-[100vw]'
-      >
+      <div ref={dropdownRef} className={className}>
         {children}
       </div>
     )

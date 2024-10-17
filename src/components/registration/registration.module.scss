@@ -1,0 +1,68 @@
+@import '../../scss/mixins';
+.login {
+  @media (max-width: 1199.98px) {
+    display: none;
+  }
+}
+
+.register {
+  @apply shadow-[-1px_0_0_0px_#F2F2F2];
+  @media (max-width: 1199.98px) {
+    display: none;
+  }
+}
+
+.container {
+  @apply max-w-[496px] px-[4.5rem] pt-[2.5rem];
+  @include adaptiveValue('min-width', 496, 374);
+  @include adaptiveValue('padding-inline', 72, 20);
+  @include adaptiveValue('padding-top', 40, 20);
+}
+
+.body {
+}
+
+.closeButton {
+  @apply absolute right-[2.5rem] cursor-pointer bg-black;
+  @include adaptiveValue('height', 40, 30);
+  @include adaptiveValue('top', 40, 20);
+  @include adaptiveValue('right', 72, 20);
+  @include adaptiveValue('width', 40, 30);
+  &:hover .closeCross::before,
+  &:hover .closeCross::after {
+    background-color: #757575;
+  }
+
+  .closeCross {
+    @apply absolute right-[11px] top-[11px] h-[18px] w-[18px] rotate-45 transform;
+    @include adaptiveValue('height', 18, 9);
+    @include adaptiveValue('width', 18, 9);
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      height: 2px;
+      width: 100%;
+      background: white;
+      transition: background-color 250ms ease-in-out;
+      transform: translateY(-50%);
+      display: inline-block;
+    }
+
+    &::after {
+      transform: translateY(-50%) rotate(90deg);
+    }
+  }
+}
+
+.mobileLogin {
+  @media (min-width: 1199.98px) {
+    display: none;
+  }
+  .loginButton {
+    @apply relative mb-[1.5625rem] mr-[20px] !inline h3;
+  }
+}
