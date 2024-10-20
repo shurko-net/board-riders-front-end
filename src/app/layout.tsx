@@ -1,4 +1,3 @@
-import Header from '@/components/header/Header'
 import { SITE_NAME } from '@/constants/seo.constants'
 import type { Metadata } from 'next'
 import React from 'react'
@@ -23,7 +22,6 @@ export default function RootLayout({
       <body>
         <Providers>
           <div className='wrapper'>
-            <Header />
             {children}
           </div>
         </Providers>

@@ -1,7 +1,12 @@
 'use client'
-import { useDynamicAdapt } from '@/hooks/useDynamicAdapt'
+
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { useDynamicAdapt } from '@/hooks/useDynamicAdapt'
+import { useLogout } from '@/api/queries/useLogout'
+import { Registration } from '../registration/Registration'
+import { IUser } from '@/types/types'
+
 import ArrowIcon from '../ArrowIcon'
 import BasketIcon from '../BasketIcon'
 import CardIcon from '../CardIcon'
@@ -11,13 +16,10 @@ import LocationIcon from '../LocationIcon'
 import LogoIcon from '../LogoIcon'
 import LoupeIcon from '../LoupeIcon'
 import ProfileIcon from '../ProfileIcon'
-
-import { useGetUser } from '@/api/queries/useGetUser'
-import { useLogout } from '@/api/queries/useLogout'
-import { Registration } from '../registration/Registration'
 import SingIcon from '../SignIcon'
 import Spoiler from '../spoiler/Spoiler'
 import style from './header.module.scss'
+
 
 const menuCatalogArray = [
   'Новинки',
@@ -34,9 +36,13 @@ const menuCatalogArray = [
   'Бренды',
   'Распродажа'
 ]
-function Header() {
-  const { data: user, isLoading } = useGetUser()
-  const { mutateLogout, isLogoutLoading } = useLogout()
+
+interface HeaderProps {
+  user: IUser;
+}
+
+function Header({ user }: HeaderProps) {
+  const { mutateLogout } = useLogout()
   // const { isLoginLoading } = useLogin()
 
   useDynamicAdapt('max')
@@ -68,10 +74,6 @@ function Header() {
       window.removeEventListener('resize', handleResize)
     }
   }, [isOpen, hasMounted])
-
-  if (isLoading || isLogoutLoading) {
-    return <div>Loading...</div>
-  }
 
   return (
     <header className={style.header}>
@@ -264,9 +266,9 @@ function Header() {
                 user
                   ? () => setIsActiveAccount(!isActiveAccount)
                   : () => {
-                      updateToggle(1)
-                      setIsModalOpen(true)
-                    }
+                    updateToggle(1)
+                    setIsModalOpen(true)
+                  }
               }
               ref={buttonRefAccount}
               className={style.userActionsItem}
