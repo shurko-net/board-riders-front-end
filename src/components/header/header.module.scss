@@ -119,7 +119,7 @@
       }
       @apply flex flex-wrap items-center gap-x-[25px] gap-y-[5px];
       .userActionsItem {
-        @apply relative flex cursor-pointer flex-col items-center gap-y-[5px] caption-capital;
+        @apply flex cursor-pointer flex-col items-center gap-y-[5px] caption-capital;
       }
     }
   }

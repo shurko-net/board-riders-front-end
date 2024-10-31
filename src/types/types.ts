@@ -10,6 +10,6 @@ export interface IFormDataLogin extends Pick<IUser, 'email'> {
   password: string
 }
 
-export interface IFormDataLoginRegister extends Pick<IUser, 'email' | 'name'> {
+export interface IFormDataRegister extends Pick<IUser, 'email' | 'name'> {
   password: string
 }

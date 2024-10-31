@@ -1,0 +1,68 @@
+@import '../../scss/mixins';
+.footer {
+  background: url('/images/Footer.jpg');
+  background-size: cover;
+  background-position: left top;
+  background-repeat: no-repeat;
+
+  .body {
+    @apply mb-[157px] mt-[23.2%] sm:mb-[20px];
+
+    .top {
+      @apply mb-[1.3125rem] flex items-start justify-between md:flex-col md:items-center;
+      & > *:not(:first-child):not(:last-child) {
+        @apply mb-[2.5rem];
+      }
+      .newsletterBlock {
+        @apply flex items-center border-[1px] border-solid border-[white] border-opacity-20 py-[0.75rem] pl-[1.375rem] pr-[1.6875rem] xs:pl-[1.25rem] xs:pr-[1.25rem];
+        .newsletterBlockText {
+          @apply xs:max-w-[16.1875rem];
+          @include adaptiveValue('margin-right', 177, 0);
+          color: white;
+        }
+      }
+    }
+
+    .main {
+      @apply mb-[1.875rem] grid grid-cols-new1 gap-[20px] border-y border-[white] border-opacity-20 py-[2.125rem] sm:mb-[25px] sm:!grid-cols-1 sm:gap-0 sm:border-b-0 sm:py-0 sm:pt-0 md:grid-cols-[repeat(auto-fit,minmax(182px,1fr))] xs:border-b-0;
+
+      .application {
+      }
+
+      .contacts {
+        @apply flex flex-col gap-[1.125rem] pl-[4px];
+
+        .contactsLink {
+          @apply mb-[0.625rem] block text-lg font-medium leading-[1.375rem];
+        }
+
+        .phoneBlock {
+          @apply flex gap-[1.5625rem];
+
+          .phoneTextBody {
+          }
+        }
+        .emailBlock {
+          @apply flex gap-[1.4375rem];
+        }
+      }
+      .menu {
+        .list {
+          li:not(:last-child) {
+            @apply mb-[20px];
+          }
+          .item {
+            @apply flex;
+            .menuLink {
+              @apply text-[12px] font-medium leading-[14px] text-[#8D8D8D] hover:underline;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.downloadButtons {
+  @apply flex flex-col gap-[0.9375rem] md:flex-row;
+}

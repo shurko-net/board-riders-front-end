@@ -1,25 +1,25 @@
 'use client'
 
+import { useLogout } from '@/api/queries/useLogout'
+import { useDynamicAdapt } from '@/hooks/useDynamicAdapt'
+import { IUser } from '@/types/types'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { useDynamicAdapt } from '@/hooks/useDynamicAdapt'
-import { useLogout } from '@/api/queries/useLogout'
 import { Registration } from '../registration/Registration'
-import { IUser } from '@/types/types'
 
-import ArrowIcon from '../ArrowIcon'
-import BasketIcon from '../BasketIcon'
-import CardIcon from '../CardIcon'
-import CarIcon from '../CarIcon'
-import FavoritesIcon from '../FavoritesIcon'
-import LocationIcon from '../LocationIcon'
-import LogoIcon from '../LogoIcon'
-import LoupeIcon from '../LoupeIcon'
-import ProfileIcon from '../ProfileIcon'
-import SingIcon from '../SignIcon'
+import ArrowIcon from '../icons/ArrowIcon'
+import BasketIcon from '../icons/BasketIcon'
+import CardIcon from '../icons/CardIcon'
+import CarIcon from '../icons/CarIcon'
+import FavoritesIcon from '../icons/FavoritesIcon'
+import GetOutIcon from '../icons/GetOutIcon'
+import LocationIcon from '../icons/LocationIcon'
+import LogoIcon from '../icons/LogoIcon'
+import LoupeIcon from '../icons/LoupeIcon'
+import ProfileIcon from '../icons/ProfileIcon'
+import SingIcon from '../icons/SignIcon'
 import Spoiler from '../spoiler/Spoiler'
 import style from './header.module.scss'
-
 
 const menuCatalogArray = [
   'Новинки',
@@ -38,7 +38,7 @@ const menuCatalogArray = [
 ]
 
 interface HeaderProps {
-  user: IUser;
+  user: IUser | undefined
 }
 
 function Header({ user }: HeaderProps) {
@@ -206,31 +206,48 @@ function Header({ user }: HeaderProps) {
             <div className={`${style.menuBody} ${isOpen ? 'block' : 'hidden'}`}>
               <div className={style.personalCabinet}>
                 <div className={style.personalCabinetContainer}>
-                  <Link className='mb-[0.9375rem] text-center' href='/'>
-                    Личный кабинет
-                  </Link>
-                  <button
-                    className='btn-normal-state mb-[0.625rem] body2'
-                    type='button'
-                    onClick={() => {
-                      updateToggle(1)
-                      setIsModalOpen(true)
-                    }}
-                  >
-                    Войти
-                  </button>
-                  <button
-                    className='btn-border-normal-state mb-[1.25rem]'
-                    type='button'
-                    onClick={() => {
-                      setIsModalOpen(true)
-                      updateToggle(2)
-                    }}
-                  >
-                    Зарегистрироваться
-                  </button>
-                  <hr className='mb-[1.25rem] border-t border-[#e5e5e5]'></hr>
+                  {user ? (
+                    <div className='mb-[1.25rem] flex justify-between'>
+                      <p className=''>{`Здравствуйте, ${user.name}`}</p>
+                      <button
+                        onClick={() => {
+                          mutateLogout()
+                          setIsOpen(!isOpen)
+                        }}
+                        className='text-green'
+                      >
+                        Выйти
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <Link className='mb-[0.9375rem] text-center' href='/'>
+                        Личный кабинет
+                      </Link>
+                      <button
+                        className='btn-normal-state mb-[0.625rem] body2'
+                        type='button'
+                        onClick={() => {
+                          updateToggle(1)
+                          setIsModalOpen(true)
+                        }}
+                      >
+                        Войти
+                      </button>
+                      <button
+                        className='btn-border-normal-state mb-[1.25rem]'
+                        type='button'
+                        onClick={() => {
+                          setIsModalOpen(true)
+                          updateToggle(2)
+                        }}
+                      >
+                        Зарегистрироваться
+                      </button>
+                    </>
+                  )}
                 </div>
+                <hr className='mb-[1.25rem] border-t border-[#e5e5e5]'></hr>
               </div>
             </div>
           </nav>
@@ -261,27 +278,29 @@ function Header({ user }: HeaderProps) {
             <LogoIcon />
           </Link>
           <div className={style.userActions}>
-            <button
-              onClick={
-                user
-                  ? () => setIsActiveAccount(!isActiveAccount)
-                  : () => {
-                    updateToggle(1)
-                    setIsModalOpen(true)
-                  }
-              }
-              ref={buttonRefAccount}
-              className={style.userActionsItem}
-            >
-              {user ? (
-                <div className='cap flex h-[24px] w-[24px] items-center justify-center rounded-[50%] bg-black text-white caption-capital'>
-                  {user.data.name[0]}
-                </div>
-              ) : (
-                <ProfileIcon />
-              )}
+            <div className='relative'>
+              <button
+                onClick={
+                  user
+                    ? () => setIsActiveAccount(!isActiveAccount)
+                    : () => {
+                        updateToggle(1)
+                        setIsModalOpen(true)
+                      }
+                }
+                ref={buttonRefAccount}
+                className={style.userActionsItem}
+              >
+                {user ? (
+                  <div className='cap flex h-[24px] w-[24px] items-center justify-center rounded-[50%] bg-black text-white caption-capital'>
+                    {user.name[0]}
+                  </div>
+                ) : (
+                  <ProfileIcon className='h-[24px] w-[24px]' />
+                )}
 
-              <p className='md:hidden'>{user ? 'Аккаунт' : 'Войти'}</p>
+                <p className='md:hidden'>{user ? 'Аккаунт' : 'Войти'}</p>
+              </button>
               <Spoiler
                 buttonRef={buttonRefAccount}
                 isActive={isActiveAccount}
@@ -289,22 +308,20 @@ function Header({ user }: HeaderProps) {
                 className='absolute bottom-[-90px] left-[5px] z-20 h-auto w-[135px] bg-white'
               >
                 <button className='flex h-[40px] w-[135px] items-center gap-[15px] border border-lightGray pl-[13px] before:absolute before:-top-[6px] before:left-5 before:z-10 before:border-b-[9px] before:border-l-[5px] before:border-r-[5px] before:border-b-lightGray before:border-l-transparent before:border-r-transparent after:absolute after:-top-[4px] after:left-[21px] after:z-10 after:border-b-[7px] after:border-l-[4px] after:border-r-[4px] after:border-b-white after:border-l-transparent after:border-r-transparent'>
-                  <ProfileIcon />
-                  <p>мой аккаунт</p>
+                  <ProfileIcon className='h-[16px] w-[16px]' />
+                  <p className='text-[8px] uppercase'>мой аккаунт</p>
                 </button>
                 <button
                   onClick={() => mutateLogout()}
                   className='flex h-[40px] w-[135px] items-center gap-[15px] border border-t-0 border-lightGray pl-[13px]'
                 >
-                  <ProfileIcon />
-                  выйти
+                  <GetOutIcon className='h-[20px] w-[18.75px]' />
+                  <p className='text-[8px] font-normal uppercase text-darkGray'>
+                    выйти
+                  </p>
                 </button>
               </Spoiler>
-              {/* <div className='absolute bottom-[-90px] left-[5px]'>
-                <div className='h-[45px] w-[135px]'>мой аккаунт</div>
-                <div className='h-[45px] w-[135px]'>выйти</div>
-              </div> */}
-            </button>
+            </div>
 
             <Registration
               onClose={() => setIsModalOpen(false)}

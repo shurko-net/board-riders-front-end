@@ -26,6 +26,9 @@ const config: Config = {
       },
       boxShadow: {
         custom: '0 8px 25px rgba(0, 0, 0, 0.1)'
+      },
+      gridTemplateColumns: {
+        new1: 'minmax(423px, 1fr) minmax(308px, 1fr) repeat(auto-fit,minmax(182px, 1fr))'
       }
     }
   },

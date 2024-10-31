@@ -1,8 +1,11 @@
 import { axiosClassic } from '@/api/axios'
-import { IFormDataLogin, IUser } from '@/types/types'
+import { IFormDataLogin, IFormDataRegister, IUser } from '@/types/types'
 
 class AuthService {
-  async main(type: 'login' | 'registration', data: IFormDataLogin) {
+  async main(
+    type: 'login' | 'registration',
+    data: IFormDataLogin | IFormDataRegister
+  ) {
     return await axiosClassic.post<IUser>(`/auth/${type}`, data)
   }
   async refreshToken() {

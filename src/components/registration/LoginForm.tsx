@@ -8,7 +8,7 @@ import axios from 'axios'
 import Link from 'next/link'
 import { useFormState } from 'react-dom'
 import { Input } from '../Input'
-const LoginForm = () => {
+const LoginForm = ({ onClose }: { onClose: () => void }) => {
   const { mutateLogin, isError, error, isLoginLoading } = useLogin()
 
   const [lastResult, action] = useFormState(LoginUser, undefined)
@@ -24,6 +24,7 @@ const LoginForm = () => {
         email: fields.email?.value || '',
         password: fields.password?.value || ''
       })
+      onClose()
     }
   })
 

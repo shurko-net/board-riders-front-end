@@ -20,7 +20,7 @@ export const Registration = ({
         <div className={style.container}>
           <div className={style.body}>
             <h1 className='mb-[1.5625rem] subtitle1'>Вход</h1>
-            <LoginForm />
+            <LoginForm onClose={onClose} />
           </div>
         </div>
       </div>
@@ -56,7 +56,11 @@ export const Registration = ({
             >
               Регистрация
             </button>
-            {toggleLoginButton === 1 ? <LoginForm /> : <RegisterForm />}
+            {toggleLoginButton === 1 ? (
+              <LoginForm onClose={onClose} />
+            ) : (
+              <RegisterForm />
+            )}
           </div>
         </div>
       </div>

@@ -1,11 +1,9 @@
 import authService from '@/services/auth/auth.sevice'
 import { IFormDataLogin } from '@/types/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
 import { useTransition } from 'react'
 
 export function useLogin() {
-  const { push } = useRouter()
   const queryClient = useQueryClient()
 
   const [isPending, startTransition] = useTransition()
@@ -21,7 +19,6 @@ export function useLogin() {
     onSuccess: user => {
       startTransition(() => {
         queryClient.setQueryData(['user'], user)
-        push('/')
       })
     }
   })
