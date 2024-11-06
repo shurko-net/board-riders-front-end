@@ -16,11 +16,11 @@
     "clsx": "^2.1.1",
     "js-cookie": "^3.0.5",
     "next": "14.2.8",
-    "react": "^18",
+    "react": "canary",
     "react-dom": "^18",
     "sass": "^1.78.0",
-    "zod": "^3.23.8",
-    "react": "canary"
+    "swiper": "^11.1.14",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20",
